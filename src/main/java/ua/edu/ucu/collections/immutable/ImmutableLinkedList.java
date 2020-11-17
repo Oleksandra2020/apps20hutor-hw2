@@ -1,163 +1,234 @@
 package ua.edu.ucu.collections.immutable;
 
-import java.util.List;
 import java.util.Arrays;
 
 public class ImmutableLinkedList implements ImmutableList{
-    private final List<Object> list;
+    private Node head = null;
+    private Node tail = null;
+    int size = 0;
 
-    public ImmutableLinkedList(List<Object> list)
+    public ImmutableLinkedList() {}
+
+    public ImmutableLinkedList(Object[] givenlList)
     {
-        this.list = list;
+        int n = givenlList.length;
+        this.size = givenlList.length;
+        Node[] list = new Node[n];
+        for (int i = 0; i < n; i++)
+        {
+            Node node = new Node(givenlList[i], null);
+            list[i] = node;
+            if (i > 0)
+            {
+                list[i-1].next = node;
+            }
+        }
+        if (size > 0)
+        {
+            this.head = list[0];
+            this.tail = list[size()-1];
+        }
+    }
+
+    public static class Node
+    {
+        public Object data;
+        public Node next;
+
+        public Node(Object data, Node next)
+        {
+            this.data = data;
+            this.next = next;
+        }
+    }
+
+    public void checkIndex(int index)
+    {
+        if (index > size())
+        {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     @Override
     public ImmutableList add(Object e) {
-        return add(list.size(), e);
+        return add(size(), e);
     }
 
     @Override
     public ImmutableList add(int index, Object e) {
-        List<Object> list1 = Arrays.asList();
-        for (int i = 0; i < list.size()+1; i++)
-        {
-            if (i == index)
-            {
-                list1.add(e);
-            }
-            list1.add(list.get(i));
-
-        }
-        return new ImmutableLinkedList(list1);
+        Object[] tempList = {e};
+        return addAll(index, tempList);
     }
 
     @Override
     public ImmutableList addAll(Object[] c) {
-        return addAll(list.size(), c);
+        return addAll(size(), c);
     }
 
     @Override
     public ImmutableList addAll(int index, Object[] c) {
-        List<Object> list1 = Arrays.asList();
-        for (int i = 0; i < list.size(); i++)
+        checkIndex(index);
+        Object[] list1 = new Object[size() + c.length];
+        Node node = head;
+        int i = 0;
+        while (i != index)
         {
-            if (i == index)
-            {
-                for (int j = i; j < c.length; j++)
-                {
-                    list1.add(c[j]);
-                }
-            }
-            list1.add(list.get(i));
+            list1[i] = node.data;
+            node = node.next;
+            i++;
+        }
+        int j = 0;
+        while (j < c.length)
+        {
+            list1[i+j] = c[j];
+            j++;
+        }
+        while (node != null)
+        {
+            list1[j+i] = node.data;
+            node = node.next;
+            i++;
         }
         return new ImmutableLinkedList(list1);
     }
 
     @Override
     public Object get(int index) {
-        return list.get(index);
+        checkIndex(index);
+        Node node = head;
+        Object found = null;
+        int i = 0;
+        while (node != null)
+        {
+            if (i == index)
+            {
+                found = node.data;
+                break;
+            }
+            node = node.next;
+            i += 1;
+        }
+        return found;
     }
 
     @Override
     public ImmutableList remove(int index) {
-        List<Object> list1 = null;
-        for (int i = 0; i < list.size(); i++)
+        checkIndex(index);
+        Object[] list1 = new Object[size()-1];
+        Node node = head;
+        int i = 0;
+        int j = 0;
+        while (node != null)
         {
             if (i != index)
             {
-                list1.add(list.get(i));
+                list1[j] = node.data;
+                j++;
             }
+            node = node.next;
+            i++;
         }
         return new ImmutableLinkedList(list1);
     }
 
     @Override
     public ImmutableList set(int index, Object e) {
-        List<Object> list1 = Arrays.asList();
-        for (int i = 0; i < list.size(); i++)
+        checkIndex(index);
+        Object[] list1 = new Object[size()];
+        Node node = head;
+        int i = 0;
+        while (node != null)
         {
-            if (i != index)
+            if (i == index)
             {
-                list1.add(list.get(i));
+                list1[i] = e;
             } else
             {
-                list1.add(e);
+                list1[i] = node.data;
             }
+            node = node.next;
+            i++;
         }
         return new ImmutableLinkedList(list1);
     }
 
     @Override
     public int indexOf(Object e) {
-        for (int i = 0; i < list.size(); i++)
+        Node node = head;
+        int i = 0;
+        while (node != null)
         {
-            if (list.get(i) == e)
+            if (node.data == e)
             {
                 return i;
             }
+            node = node.next;
+            i++;
         }
         return -1;
     }
 
     @Override
     public int size() {
-        return list.size();
+        return size;
     }
 
     @Override
     public ImmutableList clear() {
-        List<Object> list1 = Arrays.asList();
-        return new ImmutableLinkedList(list1);
+        return new ImmutableLinkedList();
     }
 
     @Override
     public boolean isEmpty() {
-        return list.size() == 0;
+        return size() == 0;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] list1 = new Object[size()];
+        Node node = head;
+        int i = 0;
+        while (node != null)
+        {
+            list1[i] = node.data;
+            node = node.next;
+            i++;
+        }
+        return list1;
     }
 
     public ImmutableLinkedList addFirst(Object e)
     {
-        List<Object> list1 = Arrays.asList(e);
-        list1.addAll(list);
-        return new ImmutableLinkedList(list1);
+        return (ImmutableLinkedList) add(0, e);
     }
 
     public ImmutableLinkedList addLast(Object e)
     {
-        List<Object> list1 = Arrays.asList();
-        list1.addAll(list);
-        list1.add(e);
-        return new ImmutableLinkedList(list1);
+        return (ImmutableLinkedList) add(size(), e);
     }
 
     public Object getFirst()
     {
-        return list.get(0);
+        return get(0);
     }
 
     public Object getLast()
     {
-        return list.get(list.size()-1);
+        return get(size()-1);
     }
 
     public ImmutableLinkedList removeFirst()
     {
-        List<Object> list1 = Arrays.asList();
-        list1.addAll(list);
-        list1.remove(0);
-        return new ImmutableLinkedList(list1);
+        return (ImmutableLinkedList) remove(0);
     }
 
     public  ImmutableLinkedList removeLast()
     {
-        List<Object> list1 = Arrays.asList();
-        list1.addAll(list);
-        list1.remove(list.size()-1);
-        return new ImmutableLinkedList(list1);
+        return (ImmutableLinkedList) remove(size()-1);
+    }
+
+    public String toString() {
+        return Arrays.toString(toArray());
     }
 }

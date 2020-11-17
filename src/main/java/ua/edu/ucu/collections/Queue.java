@@ -3,25 +3,32 @@ package ua.edu.ucu.collections;
 import ua.edu.ucu.collections.immutable.ImmutableLinkedList;
 
 public class Queue {
-    private final ImmutableLinkedList queue;
+    private ImmutableLinkedList queue;
 
     public Queue(ImmutableLinkedList queue)
     {
         this.queue = queue;
     }
 
+    public ImmutableLinkedList getQueue()
+    {
+        return queue;
+    }
+
     Object peek()
     {
-        return null;
+        return queue.getFirst();
     }
 
     Object dequeue()
     {
-        return null;
+        Object first = queue.getFirst();
+        queue = queue.removeFirst();
+        return first;
     }
 
     void enqueue(Object e)
     {
-        queue.addFirst(e);
+        queue = queue.addLast(e);
     }
 }

@@ -4,11 +4,16 @@ package ua.edu.ucu.collections;
 import ua.edu.ucu.collections.immutable.ImmutableLinkedList;
 
 public class Stack {
-    private final ImmutableLinkedList stack;
+    private ImmutableLinkedList stack;
 
     public Stack(ImmutableLinkedList stack)
     {
         this.stack = stack;
+    }
+
+    public ImmutableLinkedList getStack()
+    {
+        return stack;
     }
 
     Object peek()
@@ -18,11 +23,13 @@ public class Stack {
 
     Object pop()
     {
-        return stack.removeLast();
+        Object last = stack.getLast();
+        stack = stack.removeLast();
+        return last;
     }
 
     void push(Object e)
     {
-        stack.addLast(e);
+        stack = stack.addLast(e);
     }
 }
