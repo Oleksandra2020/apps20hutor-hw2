@@ -4,9 +4,9 @@ import java.util.Arrays;
 
 public final class ImmutableArrayList implements ImmutableList {
     private final Object[] array;
-    int initialCapacity = 0;
 
     public ImmutableArrayList() {
+        int initialCapacity = 0;
         this.array = new Object[initialCapacity];
     }
 
@@ -42,11 +42,11 @@ public final class ImmutableArrayList implements ImmutableList {
     @Override
     public ImmutableList addAll(int index, Object[] c) {
         checkIndex(index);
-        Object[] array1 = new Object[size() + c.length];
-        System.arraycopy(array, 0, array1, 0, index);
-        System.arraycopy(c, 0, array1, index, c.length);
-        System.arraycopy(array, index, array1, index + c.length, size()-index);
-        return new ImmutableArrayList(array1);
+        Object[] newArray = new Object[size() + c.length];
+        System.arraycopy(array, 0, newArray, 0, index);
+        System.arraycopy(c, 0, newArray, index, c.length);
+        System.arraycopy(array, index, newArray, index + c.length, size()-index);
+        return new ImmutableArrayList(newArray);
     }
 
     @Override
@@ -58,19 +58,19 @@ public final class ImmutableArrayList implements ImmutableList {
     @Override
     public ImmutableList remove(int index) {
         checkIndex(index);
-        Object[] array1 = new Object[size()-1];
-        System.arraycopy(array, 0, array1, 0, index);
-        System.arraycopy(array, index+1, array1, index, size()-index-1);
-        return new ImmutableArrayList(array1);
+        Object[] newArray = new Object[size()-1];
+        System.arraycopy(array, 0, newArray, 0, index);
+        System.arraycopy(array, index+1, newArray, index, size()-index-1);
+        return new ImmutableArrayList(newArray);
     }
 
     @Override
     public ImmutableList set(int index, Object e) {
         checkIndex(index);
-        Object[] array1 = new Object[size()];
-        System.arraycopy(array, 0, array1, 0, size());
-        array1[index] = e;
-        return new ImmutableArrayList(array1);
+        Object[] newArray = new Object[size()];
+        System.arraycopy(array, 0, newArray, 0, size());
+        newArray[index] = e;
+        return new ImmutableArrayList(newArray);
     }
 
     @Override

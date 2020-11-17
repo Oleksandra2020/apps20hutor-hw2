@@ -2,12 +2,12 @@ package ua.edu.ucu.collections.immutable;
 
 import java.util.Arrays;
 
-public class ImmutableLinkedList implements ImmutableList{
+public class ImmutableLinkedList implements ImmutableList {
     private Node head = null;
     private Node tail = null;
-    int size = 0;
+    private int size = 0;
 
-    public ImmutableLinkedList() {}
+    public ImmutableLinkedList() { }
 
     public ImmutableLinkedList(Object[] givenlList)
     {
@@ -32,8 +32,8 @@ public class ImmutableLinkedList implements ImmutableList{
 
     public static class Node
     {
-        public Object data;
-        public Node next;
+        private final Object data;
+        private Node next;
 
         public Node(Object data, Node next)
         {
@@ -69,28 +69,28 @@ public class ImmutableLinkedList implements ImmutableList{
     @Override
     public ImmutableList addAll(int index, Object[] c) {
         checkIndex(index);
-        Object[] list1 = new Object[size() + c.length];
+        Object[] newList = new Object[size() + c.length];
         Node node = head;
         int i = 0;
         while (i != index)
         {
-            list1[i] = node.data;
+            newList[i] = node.data;
             node = node.next;
             i++;
         }
         int j = 0;
         while (j < c.length)
         {
-            list1[i+j] = c[j];
+            newList[i+j] = c[j];
             j++;
         }
         while (node != null)
         {
-            list1[j+i] = node.data;
+            newList[j+i] = node.data;
             node = node.next;
             i++;
         }
-        return new ImmutableLinkedList(list1);
+        return new ImmutableLinkedList(newList);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ImmutableLinkedList implements ImmutableList{
     @Override
     public ImmutableList remove(int index) {
         checkIndex(index);
-        Object[] list1 = new Object[size()-1];
+        Object[] newList = new Object[size()-1];
         Node node = head;
         int i = 0;
         int j = 0;
@@ -123,34 +123,34 @@ public class ImmutableLinkedList implements ImmutableList{
         {
             if (i != index)
             {
-                list1[j] = node.data;
+                newList[j] = node.data;
                 j++;
             }
             node = node.next;
             i++;
         }
-        return new ImmutableLinkedList(list1);
+        return new ImmutableLinkedList(newList);
     }
 
     @Override
     public ImmutableList set(int index, Object e) {
         checkIndex(index);
-        Object[] list1 = new Object[size()];
+        Object[] newList = new Object[size()];
         Node node = head;
         int i = 0;
         while (node != null)
         {
             if (i == index)
             {
-                list1[i] = e;
+                newList[i] = e;
             } else
             {
-                list1[i] = node.data;
+                newList[i] = node.data;
             }
             node = node.next;
             i++;
         }
-        return new ImmutableLinkedList(list1);
+        return new ImmutableLinkedList(newList);
     }
 
     @Override
@@ -186,16 +186,16 @@ public class ImmutableLinkedList implements ImmutableList{
 
     @Override
     public Object[] toArray() {
-        Object[] list1 = new Object[size()];
+        Object[] newList = new Object[size()];
         Node node = head;
         int i = 0;
         while (node != null)
         {
-            list1[i] = node.data;
+            newList[i] = node.data;
             node = node.next;
             i++;
         }
-        return list1;
+        return newList;
     }
 
     public ImmutableLinkedList addFirst(Object e)
